@@ -12,6 +12,11 @@ import (
 	"github.com/gorilla/handlers"
 )
 
+var (
+	qLock *sync.RWMutex
+	queue = []string{}
+)
+
 func main() {
 
 	qLock = &sync.RWMutex{}
@@ -44,17 +49,12 @@ func GetRouter() *mux.Router {
 	return r
 }
 
-var (
-	qLock *sync.RWMutex
-	queue = []string{}
-)
-
 type request struct {
 	Name string
 }
 
 func Post(w http.ResponseWriter, r *http.Request) {
-	var req = request{}
+	var req request
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		fmt.Println(err)

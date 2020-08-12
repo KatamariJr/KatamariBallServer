@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Katamari Stream</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body{
+            font-size: 42pt;
+        }
+        input{
+            size: 400px;
+            width: 400px;
+            font-size:42px;
+        }
+        button{
+            size: 400px;
+            width: 400px;
+            font-size:42px;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function doThing() {
+            console.log($("#name").val());
+            let req = {
+                name: $("#name").val()
+            };
+            $.post("http://dev.katamarijr.com:4444", JSON.stringify(req))
+            $("#send").toggle();
+            setTimeout(function(){
+                $("#send").toggle();
+            }, 5000)
+        }
+    </script>
+    <input id="name" placeholder="Enter your name..." type="text">
+    <button id="send" onClick="doThing()">Send!</button >
+    <p>Please be respectful :)</p>
+<p>Also check out my music:
+<ul>
+        <li><a href="wasdband.bandcamp.com">WASD</a></li>
+        <li><a href="steelsamurai.bandcamp.com">Steel Samurai</a></li>
+        <li><a href="katamari.bandcamp.com">Katamari</a></li>
+    </ul>
+</p>
+</body>
+</html>
