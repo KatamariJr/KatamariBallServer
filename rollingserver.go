@@ -17,8 +17,12 @@ var (
 	queue = []string{}
 )
 
-func main() {
+// request type that we expect from a post request
+type request struct {
+	Name string
+}
 
+func main() {
 	qLock = &sync.RWMutex{}
 
 	r := GetRouter()
@@ -38,7 +42,6 @@ func main() {
 
 // GetRouter returns the route tree.
 func GetRouter() *mux.Router {
-
 	r := mux.NewRouter().StrictSlash(true)
 
 	r.Use(handlers.RecoveryHandler())
@@ -49,10 +52,7 @@ func GetRouter() *mux.Router {
 	return r
 }
 
-type request struct {
-	Name string
-}
-
+// Post will handle a post request containing a name to save in the queue.
 func Post(w http.ResponseWriter, r *http.Request) {
 	var req request
 	err := json.NewDecoder(r.Body).Decode(&req)
@@ -63,14 +63,13 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	qLock.Lock()
-
 	queue = append(queue, req.Name)
-
 	qLock.Unlock()
 
 	w.WriteHeader(200)
 }
 
+// Get will handle an get request to server the contents of the queue and reset it.
 func Get(w http.ResponseWriter, r *http.Request) {
 	qLock.Lock()
 
@@ -90,6 +89,7 @@ func Get(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
+	//empty the queue
 	queue = []string{}
 
 	qLock.Unlock()
